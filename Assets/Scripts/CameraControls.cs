@@ -50,5 +50,10 @@ public class CameraControls : MonoBehaviour {
         //prepare a raycast towards where the mouse is pointing
         RaycastHit rch;
         Physics.Raycast(x, out rch);
+
+        if(rch.collider.tag == "Plane")
+        {
+            gameObject.transform.position + cameraToWorldDirection * rch.distance;
+        }
     }
 }

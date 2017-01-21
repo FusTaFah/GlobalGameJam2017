@@ -1,0 +1,14 @@
+Medieval Stone Well 
+
+Low poly:2320
+    verts:1221
+
+Maps:1024x1024.png
+
+diffuse
+normal
+specular
+
+Have Fun!
+
+brudva@gmail.com

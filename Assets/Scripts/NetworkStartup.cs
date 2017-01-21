@@ -28,6 +28,6 @@ public class NetworkStartup : Photon.MonoBehaviour {
     {
         Debug.Log("Connected to room");
         GameObject player = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity, 0);
-        player.transform.position = new Vector3(-3.5702f, 0.15367f, -3.35f);
+        player.transform.position = gameObject.transform.position;
     }
 }

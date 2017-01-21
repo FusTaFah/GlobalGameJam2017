@@ -57,7 +57,7 @@ public class PlayerControls : Photon.MonoBehaviour {
         m_isSelected = false;
         m_movementPosition = gameObject.transform.position;
         m_bulletManager = gameObject.GetComponent<BulletManager>();
-        gameObject.tag = m_pAllegiance ? "AllyUnit" : "EnemyUnit";
+        //gameObject.tag = m_pAllegiance ? "AllyUnit" : "EnemyUnit";
         m_damagingBullet = m_pAllegiance ? "EnemyBullet" : "AllyBullet";
         m_attackSpeed = 2.0f;
         m_attackTimer = 0.0f;
@@ -141,29 +141,29 @@ public class PlayerControls : Photon.MonoBehaviour {
 
             if (m_state == UnitState.IDLE)
             {
-                if (m_enemyInRangeScan >= 2.0f)
-                {
-                    string enemy = m_pAllegiance ? "EnemyUnit" : "AllyUnit";
-                    bool enemyFound = false;
-                    foreach (GameObject g in GameObject.FindGameObjectsWithTag(enemy))
-                    {
-                        if ((g.transform.position - gameObject.transform.position).sqrMagnitude <= m_maxSearchRange * m_maxSearchRange)
-                        {
-                            Attack(g);
-                            enemyFound = true;
-                            break;
-                        }
-                    }
-                    if (!enemyFound)
-                    {
-                        Debug.Log("Out of range");
-                    }
-                    m_enemyInRangeScan = 0.0f;
-                }
-                else
-                {
-                    m_enemyInRangeScan += Time.deltaTime;
-                }
+                //if (m_enemyInRangeScan >= 2.0f)
+                //{
+                //    string enemy = m_pAllegiance ? "EnemyUnit" : "AllyUnit";
+                //    bool enemyFound = false;
+                //    foreach (GameObject g in GameObject.FindGameObjectsWithTag(enemy))
+                //    {
+                //        if ((g.transform.position - gameObject.transform.position).sqrMagnitude <= m_maxSearchRange * m_maxSearchRange)
+                //        {
+                //            Attack(g);
+                //            enemyFound = true;
+                //            break;
+                //        }
+                //    }
+                //    if (!enemyFound)
+                //    {
+                //        Debug.Log("Out of range");
+                //    }
+                //    m_enemyInRangeScan = 0.0f;
+                //}
+                //else
+                //{
+                //    m_enemyInRangeScan += Time.deltaTime;
+                //}
             }
         }
     }
@@ -180,6 +180,16 @@ public class PlayerControls : Photon.MonoBehaviour {
             gameObject.transform.forward = directionToGoal;
             //gameObject.transform.position = (gameObject.transform.position + gameObject.transform.TransformDirection(directionToGoal * Time.deltaTime * 10.0f));
             gameObject.transform.position = (gameObject.transform.position + gameObject.transform.forward * Time.deltaTime * 10.0f);
+
+            //determine space above ground
+            Ray down = new Ray(gameObject.transform.position, new Vector3(0.0f, -1.0f, 0.0f));
+            RaycastHit raycastDown;
+            Physics.Raycast(down, out raycastDown);
+            if(raycastDown.collider.tag == "Plane")
+            {
+                Vector3 displaced = new Vector3(0.0f, gameObject.transform.position.y - raycastDown.distance + 1.0f, 0.0f);
+                gameObject.transform.position += displaced;
+            }
         }
         else
         {

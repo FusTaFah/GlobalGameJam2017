@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UnitAbility : MonoBehaviour {
+public class UnitAbility {
 
     string m_abilityName;
     float m_cooldown;

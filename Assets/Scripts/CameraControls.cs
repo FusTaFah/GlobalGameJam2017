@@ -59,7 +59,37 @@ public class CameraControls : MonoBehaviour {
                     player.GetComponent<PlayerControls>().Move(gameObject.transform.position + cameraToWorldDirection * rch.distance + new Vector3(0.0f, 1.0f, 0.0f));
 
                 }
+
+                if(rch.collider.tag == "Enemy")
+                {
+                    player.GetComponent<PlayerControls>().Attack(rch.collider.gameObject);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                player.GetComponent<PlayerControls>().UseAbility(1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+
             }
         }
+    }
+
+    public GameObject GetPlayer()
+    {
+        return player;
     }
 }

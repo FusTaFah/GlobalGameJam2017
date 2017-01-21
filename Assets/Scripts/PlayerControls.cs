@@ -14,8 +14,6 @@ public class PlayerControls : Photon.MonoBehaviour {
     float m_attackRange;
     //distance to target that is considered close enough to stop
     float m_stoppingRange;
-    //projectile firing manager
-    BulletManager m_bulletManager;
     //allegiance of this unit
     public bool m_pAllegiance;
     //attacking target
@@ -39,7 +37,7 @@ public class PlayerControls : Photon.MonoBehaviour {
     //texture for health bar
     Texture2D m_healthBar;
     //list of abilities
-    List<UnitAbility> m_abilities;
+    List<GameObject> m_abilities;
 
     enum UnitState
     {
@@ -52,13 +50,10 @@ public class PlayerControls : Photon.MonoBehaviour {
 
     // initialises the fields
     void Start () {
-        m_attackRange = 5.0f;
+        m_attackRange = 2.0f;
         m_stoppingRange = 0.5f;
         m_isSelected = false;
         m_movementPosition = gameObject.transform.position;
-        m_bulletManager = gameObject.GetComponent<BulletManager>();
-        //gameObject.tag = m_pAllegiance ? "AllyUnit" : "EnemyUnit";
-        m_damagingBullet = m_pAllegiance ? "EnemyBullet" : "AllyBullet";
         m_attackSpeed = 2.0f;
         m_attackTimer = 0.0f;
         m_health = 10;
@@ -66,8 +61,11 @@ public class PlayerControls : Photon.MonoBehaviour {
         m_enemyInRangeScan = 0.0f;
         m_maxSearchRange = 7.0f;
         m_state = UnitState.IDLE;
-        m_abilities = new List<UnitAbility>();
-        m_abilities.Add(new UnitAbility("Attack", 2.0f));
+        m_abilities = new List<GameObject>();
+        GameObject ability1 = PhotonNetwork.Instantiate("Ability", gameObject.transform.position, gameObject.transform.rotation, 0);
+        ability1.GetComponent<UnitAbility>().SetUnitAbility("Attack", 2.0f, 0.1f, 10.0f, 5.0f, 1);
+        m_abilities.Add(ability1);
+        //m_abilities.Add(new UnitAbility("Throw", 4.0f));
 
         int spriteX = 20;
         int spriteY = 4;
@@ -89,10 +87,9 @@ public class PlayerControls : Photon.MonoBehaviour {
 	void Update () {
         if(m_state != UnitState.DEAD)
         {
-            m_attackTimer += Time.deltaTime;
-            foreach(UnitAbility ability in m_abilities)
+            foreach(GameObject ability in m_abilities)
             {
-                ability.UpdateCooldown(Time.deltaTime);
+                ability.GetComponent<UnitAbility>().UpdateCooldown(Time.deltaTime);
             }
             if (m_state == UnitState.MOVING)
             {
@@ -102,9 +99,10 @@ public class PlayerControls : Photon.MonoBehaviour {
             {
                 if (m_target != null)
                 {
-                    if (m_attackTimer > m_attackSpeed)
+                    if (m_abilities[0].GetComponent<UnitAbility>().GetCurrentCooldown() >= m_abilities[0].GetComponent<UnitAbility>().GetMaxCooldown())
                     {
-                        m_bulletManager.SpawnBullet(gameObject.transform.position, Quaternion.identity, m_target, m_pAllegiance ? "AllyBullet" : "EnemyBullet");
+                        //attack
+                        m_abilities[0].GetComponent<UnitAbility>().UseAbility();
                         m_attackTimer = 0.0f;
                     }
                     
@@ -297,9 +295,14 @@ public class PlayerControls : Photon.MonoBehaviour {
         return m_state == UnitState.DEAD;
     }
 
-    public List<UnitAbility> GetAbilityList()
+    public List<GameObject> GetAbilityList()
     {
         return m_abilities;
+    }
+
+    public void UseAbility(int abilityNumber)
+    {
+        
     }
 
     public bool IsSelected()

@@ -187,7 +187,7 @@ public class PlayerControls : Photon.MonoBehaviour {
             Physics.Raycast(down, out raycastDown);
             if(raycastDown.collider.tag == "Plane")
             {
-                Vector3 displaced = new Vector3(0.0f, gameObject.transform.position.y - raycastDown.distance + 1.0f, 0.0f);
+                Vector3 displaced = new Vector3(0.0f, -raycastDown.distance + 1.0f, 0.0f);
                 gameObject.transform.position += displaced;
             }
         }

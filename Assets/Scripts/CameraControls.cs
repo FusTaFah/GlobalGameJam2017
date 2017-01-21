@@ -56,7 +56,7 @@ public class CameraControls : MonoBehaviour {
             {
                 if (rch.collider.tag == "Plane")
                 {
-                    player.GetComponent<PlayerControls>().Move(gameObject.transform.position + cameraToWorldDirection * rch.distance);
+                    player.GetComponent<PlayerControls>().Move(gameObject.transform.position + cameraToWorldDirection * rch.distance + new Vector3(0.0f, 1.0f, 0.0f));
 
                 }
             }

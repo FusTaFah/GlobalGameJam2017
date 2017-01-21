@@ -190,6 +190,19 @@ public class PlayerControls : Photon.MonoBehaviour {
                 Vector3 displaced = new Vector3(0.0f, -raycastDown.distance + 1.0f, 0.0f);
                 gameObject.transform.position += displaced;
             }
+            //check if the terrain is not too steep
+            Vector3 forward = gameObject.transform.forward;
+            forward.y = 0.0f;
+            Vector3 inFront = gameObject.transform.position + forward * 0.1f;
+            Ray downInFront = new Ray(inFront, new Vector3(0.0f, -1.0f, 0.0f));
+            float distanceCurrent = raycastDown.distance;
+            Physics.Raycast(downInFront, out raycastDown);
+            float above = distanceCurrent - raycastDown.distance;
+            if(Mathf.Atan2(above, 0.1f) > Mathf.PI / 4.0f)
+            {
+                gameObject.transform.position -= gameObject.transform.forward * 0.5f;
+                m_state = UnitState.IDLE;
+            }
         }
         else
         {

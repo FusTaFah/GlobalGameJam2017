@@ -6,6 +6,8 @@ public class PlayerControls : Photon.MonoBehaviour {
 
     //use the event system!
 
+    //test
+
     //boolean which states whether or not this unit has been selected
     bool m_isSelected;
     //position the unit is to be moved to

@@ -38,6 +38,7 @@ public class PlayerControls : Photon.MonoBehaviour {
     Texture2D m_healthBar;
     //list of abilities
     List<GameObject> m_abilities;
+    Vector3 m_cursorDirection;
 
     enum UnitState
     {
@@ -90,6 +91,8 @@ public class PlayerControls : Photon.MonoBehaviour {
             foreach(GameObject ability in m_abilities)
             {
                 ability.GetComponent<UnitAbility>().UpdateCooldown(Time.deltaTime);
+                ability.transform.position = gameObject.transform.position;
+                ability.transform.forward = m_cursorDirection;
             }
             if (m_state == UnitState.MOVING)
             {
@@ -102,9 +105,8 @@ public class PlayerControls : Photon.MonoBehaviour {
                     if (m_abilities[0].GetComponent<UnitAbility>().GetCurrentCooldown() >= m_abilities[0].GetComponent<UnitAbility>().GetMaxCooldown())
                     {
                         //attack
-                        m_abilities[0].GetComponent<UnitAbility>().UseAbility();
-                        m_attackTimer = 0.0f;
-                    }
+                        m_abilities[0].transform.forward = gameObject.transform.forward;
+                        m_abilities[0].GetComponent<UnitAbility>().UseAbility();                    }
                     
                     if ((m_target.transform.position - gameObject.transform.position).sqrMagnitude > m_attackRange * m_attackRange)
                     {
@@ -323,5 +325,10 @@ public class PlayerControls : Photon.MonoBehaviour {
     public bool IsInstancedPlayer()
     {
         return photonView.isMine;
+    }
+
+    public void SetCursorDirection(Vector3 direction)
+    {
+        m_cursorDirection = direction;
     }
 }

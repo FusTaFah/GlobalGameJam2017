@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UnitAbility: MonoBehaviour {
 
@@ -9,9 +10,9 @@ public class UnitAbility: MonoBehaviour {
     float m_abilitySpeed;
     float m_abilityDamage;
     float m_abilitySize;
-    int m_abilityDurability;
+    float m_abilityDurability;
 
-    public void SetUnitAbility(string abilityName, float cooldown, float speed, float damage, float size, int durability)
+    public void SetUnitAbility(string abilityName, float cooldown, float speed, float damage, float size, float durability)
     {
         m_abilityName = abilityName;
         m_cooldown = cooldown;
@@ -20,6 +21,11 @@ public class UnitAbility: MonoBehaviour {
         m_abilityDamage = damage;
         m_abilitySize = size;
         m_abilityDurability = durability;
+    }
+
+    void Update()
+    {
+
     }
 
     public void UpdateCooldown(float deltaTime)
@@ -52,7 +58,8 @@ public class UnitAbility: MonoBehaviour {
     public void UseAbility()
     {
         GameObject ability = PhotonNetwork.Instantiate("AbilityParticle", gameObject.transform.position + gameObject.transform.forward, gameObject.transform.rotation, 0);
-        ability.GetComponent<Rigidbody>().velocity = gameObject.transform.forward * m_abilitySpeed;
+        ability.GetComponent<Rigidbody>().velocity = gameObject.transform.forward * m_abilitySpeed * Time.deltaTime;
         ability.transform.localScale *= m_abilitySize;
+        ability.GetComponent<BulletSpan>().Timer = m_abilityDurability;
     }
 }

@@ -63,7 +63,7 @@ public class PlayerControls : Photon.MonoBehaviour {
         m_state = UnitState.IDLE;
         m_abilities = new List<GameObject>();
         GameObject ability1 = PhotonNetwork.Instantiate("Ability", gameObject.transform.position, gameObject.transform.rotation, 0);
-        ability1.GetComponent<UnitAbility>().SetUnitAbility("Attack", 2.0f, 0.1f, 10.0f, 5.0f, 1);
+        ability1.GetComponent<UnitAbility>().SetUnitAbility("Attack", 2.0f, 0.1f, 3, 5.0f, 0.1f);
         m_abilities.Add(ability1);
         //m_abilities.Add(new UnitAbility("Throw", 4.0f));
 

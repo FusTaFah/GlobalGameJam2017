@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraControls : MonoBehaviour {
 
     bool foundPlayer;
-    Transform player;
+    GameObject player;
     Camera m_cam;
 
 	// Use this for initialization
@@ -24,7 +24,7 @@ public class CameraControls : MonoBehaviour {
             {
                 if (currentPlayer.GetComponent<PlayerControls>().IsInstancedPlayer())
                 {
-                    player = currentPlayer.transform;
+                    player = currentPlayer;
                     foundPlayer = true;
                     break;
                 }
@@ -53,7 +53,7 @@ public class CameraControls : MonoBehaviour {
 
         if(rch.collider.tag == "Plane")
         {
-            gameObject.transform.position + cameraToWorldDirection * rch.distance;
+            player.GetComponent<PlayerControls>().MoveTowards(gameObject.transform.position + cameraToWorldDirection * rch.distance);
         }
     }
 }

@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour {
         pathGO = GameObject.Find("Path");
         // GetNextPathNode();
         playerSeen = false;
-        target = GameObject.Find("Fortress_Gate").transform.GetChild(0).transform.position;
+        target = GameObject.Find("Fortress Gate").transform.GetChild(0).transform.position;
     }
 
     void GetNextPathNode()
@@ -71,17 +71,17 @@ public class Enemy : MonoBehaviour {
         }
         else if(!playerSeen)
         {
-            agent.SetDestination(GameObject.Find("Fortress_Gate").transform.GetChild(0).transform.position);
+            agent.SetDestination(GameObject.Find("Fortress Gate").transform.GetChild(0).transform.position);
         }
 
-        if (Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <2)
-        {
-            agent.Stop();
-        }
-        else
-        {
-            agent.Resume();
-        }
+        //if (Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <2)
+        //{
+        //    agent.Stop();
+        //}
+        //else
+        //{
+        //    agent.Resume();
+        //}
 
 
 

@@ -2,17 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class UnitAbility: MonoBehaviour {
+public class UnitAbility: Photon.MonoBehaviour {
 
     string m_abilityName;
     float m_cooldown;
     float m_cooldownTimer;
     float m_abilitySpeed;
-    float m_abilityDamage;
+    int m_abilityDamage;
     float m_abilitySize;
     float m_abilityDurability;
 
-    public void SetUnitAbility(string abilityName, float cooldown, float speed, float damage, float size, float durability)
+    public void SetUnitAbility(string abilityName, float cooldown, float speed, int damage, float size, float durability)
     {
         m_abilityName = abilityName;
         m_cooldown = cooldown;
@@ -61,5 +61,6 @@ public class UnitAbility: MonoBehaviour {
         ability.GetComponent<Rigidbody>().velocity = gameObject.transform.forward * m_abilitySpeed * Time.deltaTime;
         ability.transform.localScale *= m_abilitySize;
         ability.GetComponent<BulletSpan>().Timer = m_abilityDurability;
+        ability.GetComponent<BulletSpan>().Damage = m_abilityDamage;
     }
 }

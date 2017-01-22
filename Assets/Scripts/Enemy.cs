@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Photon;
 
-public class Enemy : MonoBehaviour {
+public class Enemy : Photon.MonoBehaviour {
 
     // public List<GameObject> pathPoints;
     GameObject pathGO;
     public Transform targetPathNode;
     Vector3 target;
     int pathNodeIndex = 0;
-    public int health = 1;
+    public int health = 10;
     int maxHealth;
     public int speed = 10;
     public int money = 1;
@@ -143,7 +144,9 @@ public class Enemy : MonoBehaviour {
     }
     public void takeDamage(int damage)
     {
+        
         health -= damage;
+        Debug.Log("health = " + health);
 
         //fuck off intellisense
         float proportionRemainingHealth = ((float)health / (float)maxHealth) * m_healthBar.width;

@@ -104,7 +104,7 @@ public class PlayerControls : Photon.MonoBehaviour {
             {
                 if (m_target != null)
                 {
-                    if (m_abilities[0].GetComponent<UnitAbility>().GetCurrentCooldown() >= m_abilities[0].GetComponent<UnitAbility>().GetMaxCooldown())
+                    if (m_abilities[0].GetComponent<UnitAbility>().GetCurrentCooldown() >= 0.0f)
                     {
                         //attack
                         m_abilities[0].transform.forward = gameObject.transform.forward;

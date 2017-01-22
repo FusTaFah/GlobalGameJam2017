@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BulletSpan : MonoBehaviour {
+public class BulletSpan : Photon.MonoBehaviour {
 
     //variable to keep track of how long this bullet has been fired for.
     float timer;
@@ -63,7 +63,9 @@ public class BulletSpan : MonoBehaviour {
     {
         if(coll.collider.gameObject.tag == "Enemy")
         {
-            coll.collider.gameObject.GetComponent<Enemy>().takeDamage(damage);
+            Debug.Log("lol");
+            //coll.gameObject.GetComponent<Enemy>().takeDamage(damage);
+            coll.gameObject.SendMessage("takeDamage", damage);
             //flag this bullet for removal by the manager
             beingUsed = false;
             //reset the timer

@@ -33,20 +33,20 @@ public class UI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    if(m_cameraReference.GetPlayer() != null)
-        {
-            m_abilities = m_cameraReference.GetPlayer().GetComponent<PlayerControls>().GetAbilityList();
-        }
-        else
-        {
-            m_abilities.Clear();
-        }
+	    //if(m_cameraReference.GetPlayer() != null)
+     //   {
+     //       m_abilities = m_cameraReference.GetPlayer().GetComponent<PlayerControls>().GetAbilityList();
+     //   }
+     //   else
+     //   {
+     //       m_abilities.Clear();
+     //   }
 	}
 
     void OnGUI()
     {
         //draw the background of the gui
-        GUI.DrawTexture(new Rect(new Vector2(0.0f, 3 * Screen.height / 4.0f), new Vector2(Screen.width, Screen.height / 4.0f)), tex);
+      //  GUI.DrawTexture(new Rect(new Vector2(0.0f, 3 * Screen.height / 4.0f), new Vector2(Screen.width, Screen.height / 4.0f)), tex);
 
         //list the abilities
         uint k = 1;

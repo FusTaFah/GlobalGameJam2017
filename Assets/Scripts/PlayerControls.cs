@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerControls : Photon.MonoBehaviour {
 
     //use the event system!
 
-    //test
-    Animator m_animator;   
     //boolean which states whether or not this unit has been selected
     bool m_isSelected;
     //position the unit is to be moved to
@@ -40,7 +39,6 @@ public class PlayerControls : Photon.MonoBehaviour {
     Texture2D m_healthBar;
     //list of abilities
     List<GameObject> m_abilities;
-    Vector3 m_cursorDirection;
 
     enum UnitState
     {
@@ -53,6 +51,7 @@ public class PlayerControls : Photon.MonoBehaviour {
 
     // initialises the fields
     void Start () {
+
         m_attackRange = 2.0f;
         m_stoppingRange = 0.5f;
         m_isSelected = false;
@@ -66,10 +65,10 @@ public class PlayerControls : Photon.MonoBehaviour {
         m_state = UnitState.IDLE;
         m_abilities = new List<GameObject>();
         GameObject ability1 = PhotonNetwork.Instantiate("Ability", gameObject.transform.position, gameObject.transform.rotation, 0);
-        ability1.GetComponent<UnitAbility>().SetUnitAbility("Attack", 2.0f, 0.1f, 3, 5.0f, 0.1f);
+        ability1.GetComponent<UnitAbility>().SetUnitAbility("Attack", 2.0f, 0.1f, 10.0f, 5.0f, 1);
         m_abilities.Add(ability1);
         //m_abilities.Add(new UnitAbility("Throw", 4.0f));
-        m_animator = gameObject.GetComponent<Animator>();
+
         int spriteX = 20;
         int spriteY = 4;
         m_healthBar = new Texture2D(spriteX, spriteY);
@@ -85,16 +84,15 @@ public class PlayerControls : Photon.MonoBehaviour {
         m_healthBar.SetPixels(colors);
         m_healthBar.Apply(false);
     }
-	
+
 	// Update is called once per frame
 	void Update () {
-        if(m_state != UnitState.DEAD)
+       
+        if (m_state != UnitState.DEAD)
         {
             foreach(GameObject ability in m_abilities)
             {
                 ability.GetComponent<UnitAbility>().UpdateCooldown(Time.deltaTime);
-                ability.transform.position = gameObject.transform.position;
-                ability.transform.forward = m_cursorDirection;
             }
             if (m_state == UnitState.MOVING)
             {
@@ -104,11 +102,12 @@ public class PlayerControls : Photon.MonoBehaviour {
             {
                 if (m_target != null)
                 {
-                    if (m_abilities[0].GetComponent<UnitAbility>().GetCurrentCooldown() >= 0.0f)
+                    if (m_abilities[0].GetComponent<UnitAbility>().GetCurrentCooldown() >= m_abilities[0].GetComponent<UnitAbility>().GetMaxCooldown())
                     {
                         //attack
-                        m_abilities[0].transform.forward = gameObject.transform.forward;
-                        m_abilities[0].GetComponent<UnitAbility>().UseAbility();                    }
+                        m_abilities[0].GetComponent<UnitAbility>().UseAbility();
+                        m_attackTimer = 0.0f;
+                    }
                     
                     if ((m_target.transform.position - gameObject.transform.position).sqrMagnitude > m_attackRange * m_attackRange)
                     {
@@ -172,44 +171,45 @@ public class PlayerControls : Photon.MonoBehaviour {
 
     void MoveToTarget()
     {
-        //get the direction from the current position to the goal
-        Vector3 directionToGoal = (m_movementPosition - gameObject.transform.position).normalized;
-        //if the unit is not already close enough to the goal
-        if ((m_movementPosition - gameObject.transform.position).magnitude >= m_stoppingRange)
-        {
-            //move towards the goal position
-            //gameObject.transform.forward = directionToGoal;
-            gameObject.transform.forward = directionToGoal;
-            //gameObject.transform.position = (gameObject.transform.position + gameObject.transform.TransformDirection(directionToGoal * Time.deltaTime * 10.0f));
-            gameObject.transform.position = (gameObject.transform.position + gameObject.transform.forward * Time.deltaTime * 10.0f);
+        
+        ////get the direction from the current position to the goal
+        //Vector3 directionToGoal = (m_movementPosition - gameObject.transform.position).normalized;
+        ////if the unit is not already close enough to the goal
+        //if ((m_movementPosition - gameObject.transform.position).magnitude >= m_stoppingRange)
+        //{
+        //    //move towards the goal position
+        //    //gameObject.transform.forward = directionToGoal;
+        //    gameObject.transform.forward = directionToGoal;
+        //    //gameObject.transform.position = (gameObject.transform.position + gameObject.transform.TransformDirection(directionToGoal * Time.deltaTime * 10.0f));
+        //    gameObject.transform.position = (gameObject.transform.position + gameObject.transform.forward * Time.deltaTime * 10.0f);
 
-            //determine space above ground
-            Ray down = new Ray(gameObject.transform.position, new Vector3(0.0f, -1.0f, 0.0f));
-            RaycastHit raycastDown;
-            Physics.Raycast(down, out raycastDown);
-            if(raycastDown.collider.tag == "Plane")
-            {
-                Vector3 displaced = new Vector3(0.0f, -raycastDown.distance + 1.0f, 0.0f);
-                gameObject.transform.position += displaced;
-            }
-            //check if the terrain is not too steep
-            Vector3 forward = gameObject.transform.forward;
-            forward.y = 0.0f;
-            Vector3 inFront = gameObject.transform.position + forward * 0.1f;
-            Ray downInFront = new Ray(inFront, new Vector3(0.0f, -1.0f, 0.0f));
-            float distanceCurrent = raycastDown.distance;
-            Physics.Raycast(downInFront, out raycastDown);
-            float above = distanceCurrent - raycastDown.distance;
-            if(Mathf.Atan2(above, 0.1f) > Mathf.PI / 4.0f)
-            {
-                gameObject.transform.position -= gameObject.transform.forward * 0.5f;
-                m_state = UnitState.IDLE;
-            }
-        }
-        else
-        {
-            m_state = UnitState.IDLE;
-        }
+        //    //determine space above ground
+        //    Ray down = new Ray(gameObject.transform.position, new Vector3(0.0f, -1.0f, 0.0f));
+        //    RaycastHit raycastDown;
+        //    Physics.Raycast(down, out raycastDown);
+        //    if(raycastDown.collider.tag == "Plane")
+        //    {
+        //        Vector3 displaced = new Vector3(0.0f, -raycastDown.distance + 1.0f, 0.0f);
+        //        gameObject.transform.position += displaced;
+        //    }
+        //    //check if the terrain is not too steep
+        //    Vector3 forward = gameObject.transform.forward;
+        //    forward.y = 0.0f;
+        //    Vector3 inFront = gameObject.transform.position + forward * 0.1f;
+        //    Ray downInFront = new Ray(inFront, new Vector3(0.0f, -1.0f, 0.0f));
+        //    float distanceCurrent = raycastDown.distance;
+        //    Physics.Raycast(downInFront, out raycastDown);
+        //    float above = distanceCurrent - raycastDown.distance;
+        //    if(Mathf.Atan2(above, 0.1f) > Mathf.PI / 4.0f)
+        //    {
+        //        gameObject.transform.position -= gameObject.transform.forward * 0.5f;
+        //        m_state = UnitState.IDLE;
+        //    }
+        //}
+        //else
+        //{
+        //    m_state = UnitState.IDLE;
+        //}
     }
 
     //select this unit
@@ -237,6 +237,7 @@ public class PlayerControls : Photon.MonoBehaviour {
 
     public void Attack(GameObject target)
     {
+        Debug.Log("are we targetting?");
         m_target = target;
         Vector3 towardsTarget = target.transform.position - gameObject.transform.position;
         if (towardsTarget.sqrMagnitude > m_attackRange * m_attackRange)
@@ -327,10 +328,5 @@ public class PlayerControls : Photon.MonoBehaviour {
     public bool IsInstancedPlayer()
     {
         return photonView.isMine;
-    }
-
-    public void SetCursorDirection(Vector3 direction)
-    {
-        m_cursorDirection = direction;
     }
 }

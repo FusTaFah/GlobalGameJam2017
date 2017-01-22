@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
-public class UnitAbility: Photon.MonoBehaviour {
+public class UnitAbility: MonoBehaviour {
 
     string m_abilityName;
     float m_cooldown;
     float m_cooldownTimer;
     float m_abilitySpeed;
-    int m_abilityDamage;
+    float m_abilityDamage;
     float m_abilitySize;
-    float m_abilityDurability;
+    int m_abilityDurability;
 
-    public void SetUnitAbility(string abilityName, float cooldown, float speed, int damage, float size, float durability)
+    public void SetUnitAbility(string abilityName, float cooldown, float speed, float damage, float size, int durability)
     {
         m_abilityName = abilityName;
         m_cooldown = cooldown;
@@ -21,11 +20,6 @@ public class UnitAbility: Photon.MonoBehaviour {
         m_abilityDamage = damage;
         m_abilitySize = size;
         m_abilityDurability = durability;
-    }
-
-    void Update()
-    {
-
     }
 
     public void UpdateCooldown(float deltaTime)
@@ -58,9 +52,8 @@ public class UnitAbility: Photon.MonoBehaviour {
     public void UseAbility()
     {
         GameObject ability = PhotonNetwork.Instantiate("AbilityParticle", gameObject.transform.position + gameObject.transform.forward, gameObject.transform.rotation, 0);
-        ability.GetComponent<Rigidbody>().velocity = gameObject.transform.forward * m_abilitySpeed * Time.deltaTime;
+        ability.GetComponent<Rigidbody>().velocity = gameObject.transform.forward * m_abilitySpeed;
         ability.transform.localScale *= m_abilitySize;
-        ability.GetComponent<BulletSpan>().Timer = m_abilityDurability;
-        ability.GetComponent<BulletSpan>().Damage = m_abilityDamage;
+        m_cooldownTimer = m_cooldown;
     }
 }

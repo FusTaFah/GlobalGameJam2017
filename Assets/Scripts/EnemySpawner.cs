@@ -52,7 +52,7 @@ public class EnemySpawner : Photon.MonoBehaviour {
                     {
                         wc.spawned++;
                         PhotonNetwork.Instantiate(wc.enemyPrefab.name, 
-                            new Vector3(spawnPointFirst.transform.position.x + x, spawnPointFirst.transform.position.y,spawnPointFirst.transform.position.z+z), 
+                            new Vector3(spawnPointFirst.transform.position.x + x, 5,spawnPointFirst.transform.position.z+z), 
                             transform.rotation, 0);
                         didSpawn = true;
                         break;

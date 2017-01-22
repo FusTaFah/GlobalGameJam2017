@@ -1,30 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BulletSpan : Photon.MonoBehaviour {
+public class BulletSpan : MonoBehaviour {
 
     //variable to keep track of how long this bullet has been fired for.
     float timer;
     //boolean to say whether or not this bullet is currently in flight
     bool beingUsed;
-
-    float lifeSpan;
-
-    int damage;
+    //the type of bullet, either AllyBullet or EnemyBullet 
+    string bulletType;
+    //bullet target position
+    GameObject target;
 
     //public set and get methods for timer
     public float Timer { get { return timer; } set { timer = value; } }
     //public set and get methods for beingUsed
     public bool BeingUsed { get { return beingUsed; } set { beingUsed = value; } }
-
-    public float LifeSpan { get { return lifeSpan; } set { lifeSpan = value; } }
-
-    public int Damage { get { return damage; } set { damage = value; } }
+    //public set and get methods for bulletType
+    public string BulletType { get { return bulletType; } set { bulletType = value; } }
+    //public set and get methods for target
+    public GameObject Target { get { return target; } set { target = value; } }
 
     // Use this for initialization
     void Start()
     {
-        lifeSpan = 10.0f;
+        //initialise bulletType to empty string
+        bulletType = "";
         //initialised beingUsed to true
         beingUsed = true;
         //initialise timer to 0
@@ -39,14 +40,19 @@ public class BulletSpan : Photon.MonoBehaviour {
             //increase the time the bullet has been flying for
             timer += Time.deltaTime;
             //if the time the bullet has been flying for is greater than 3 seconds
-            if (timer >= lifeSpan)
+            if (timer >= 3.0f)
             {
                 //flag this bullet for removal by the manager
                 beingUsed = false;
                 //reset the timer
                 timer = 0.0f;
-                Destroy(gameObject);
             }
+        }
+
+        if(target != null)
+        {
+            gameObject.transform.forward = (target.transform.position - gameObject.transform.position);
+            gameObject.transform.position += (target.transform.position - gameObject.transform.position).normalized * Time.deltaTime * 20.0f;
         }
         else
         {
@@ -61,16 +67,39 @@ public class BulletSpan : Photon.MonoBehaviour {
     //when the bullet collides with any collision object
     void OnCollisionEnter(Collision coll)
     {
-        if(coll.collider.gameObject.tag == "Enemy")
+        if((coll.gameObject.tag == "EnemyUnit" && gameObject.tag == "AllyBullet") || (coll.gameObject.tag == "AllyUnit" && gameObject.tag == "EnemyBullet"))
         {
-            Debug.Log("lol");
-            //coll.gameObject.GetComponent<Enemy>().takeDamage(damage);
-            coll.gameObject.SendMessage("takeDamage", damage);
             //flag this bullet for removal by the manager
             beingUsed = false;
             //reset the timer
             timer = 0.0f;
         }
 
+        
+
+
+
+        //if (bulletType == "EnemyBullet")
+        //{
+        //    if (coll.collider.gameObject.GetComponent<UnitBehaviour>().m_pAllegiance)
+        //    {
+        //        //flag this bullet for removal by the manager
+        //        beingUsed = false;
+        //        //reset the timer
+        //        timer = 0.0f;
+        //    }
+        //}
+
+        //else if (bulletType == "AllyBullet")
+        //{
+
+        //    if (!coll.collider.gameObject.GetComponent<UnitBehaviour>().m_pAllegiance)
+        //    {
+        //        //flag this bullet for removal by the manager
+        //        beingUsed = false;
+        //        //reset the timer
+        //        timer = 0.0f;
+        //    }
+        //}
     }
 }

@@ -7,7 +7,7 @@ public class PlayerControls : Photon.MonoBehaviour {
     //use the event system!
 
     //test
-
+    Animator m_animator;   
     //boolean which states whether or not this unit has been selected
     bool m_isSelected;
     //position the unit is to be moved to
@@ -68,7 +68,7 @@ public class PlayerControls : Photon.MonoBehaviour {
         ability1.GetComponent<UnitAbility>().SetUnitAbility("Attack", 2.0f, 0.1f, 10.0f, 5.0f, 1);
         m_abilities.Add(ability1);
         //m_abilities.Add(new UnitAbility("Throw", 4.0f));
-
+        m_animator = gameObject.GetComponent<Animator>();
         int spriteX = 20;
         int spriteY = 4;
         m_healthBar = new Texture2D(spriteX, spriteY);

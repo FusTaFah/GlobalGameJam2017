@@ -47,8 +47,8 @@ public class PlayerStats : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        Debug.Log(attack_Power);
-        attackText.GetComponent<Text>().text = "Attack Point: " + attack_Power;
+        //Debug.Log(attack_Power);
+        //attackText.GetComponent<Text>().text = "Attack Point: " + attack_Power;
         //speedText.GetComponent<Text>().text = "Speed Point: " + speed;
         //healthText.GetComponent<Text>().text = "Health Point: " + health;
         //goldText.GetComponent<Text>().text = "Total Gold: " + gold;

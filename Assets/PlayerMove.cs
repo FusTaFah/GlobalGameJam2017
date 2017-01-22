@@ -11,11 +11,14 @@ public class PlayerMove : Photon.MonoBehaviour {
     public GameObject target;
     float speed = 25f;
     GameObject m_ability;
+
+    Animator m_anim;
 	
     // Use this for initialization
 	void Start () {
         m_ability = PhotonNetwork.Instantiate("Ability", gameObject.transform.position, gameObject.transform.rotation, 0);
         m_ability.GetComponent<UnitAbility>().SetUnitAbility("Attack", 2.0f, 0.1f, 3, 5.0f, 1);
+        m_anim = gameObject.GetComponent<Animator>();
     }
 	
 	// Update is called once per frame
@@ -40,7 +43,7 @@ public class PlayerMove : Photon.MonoBehaviour {
             {
                 transform.localPosition = Vector3.MoveTowards(transform.localPosition, hitInfo.point, Time.deltaTime * speed);
                 transform.LookAt(hitInfo.point);
-                // anim.SetBool("isRunning", true);
+                m_anim.SetBool("isRunning", true);
                 //print(anim.GetBool("isRunning"));
 
             }
@@ -58,7 +61,7 @@ public class PlayerMove : Photon.MonoBehaviour {
                 hitInfo = new RaycastHit();
                 hit = false;
                 down = false;
-              //  anim.SetBool("isRunning", false);
+                m_anim.SetBool("isRunning", false);
                 //   print(anim.GetBool("isRunning"));
             }
         }
